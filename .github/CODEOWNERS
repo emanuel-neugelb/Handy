@@ -1,0 +1,9 @@
+# NGLB policy and enforcement code requires owner review
+/NGLB-PATCHES.md                 @emanuel-neugelb
+/nglb/                           @emanuel-neugelb
+/src-tauri/src/nglb/             @emanuel-neugelb
+/src-tauri/src/llm_client.rs     @emanuel-neugelb
+/src-tauri/tauri.conf.json       @emanuel-neugelb
+/src-tauri/capabilities/         @emanuel-neugelb
+/src-tauri/Cargo.toml            @emanuel-neugelb
+/.github/workflows/nglb-*        @emanuel-neugelb
