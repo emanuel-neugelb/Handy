@@ -217,9 +217,14 @@ fn build_headers(provider: &PostProcessProvider, api_key: &str) -> Result<Header
 
 /// Create an HTTP client with provider-specific headers
 fn create_client(provider: &PostProcessProvider, api_key: &str) -> Result<reqwest::Client, String> {
+    #[cfg(feature = "nglb-managed")]
+    crate::nglb::guard_llm_url(&provider.base_url)?;
     let headers = build_headers(provider, api_key)?;
-    reqwest::Client::builder()
-        .default_headers(headers)
+    let builder = reqwest::Client::builder().default_headers(headers);
+    // Redirects could leave the allowlisted host.
+    #[cfg(feature = "nglb-managed")]
+    let builder = builder.redirect(reqwest::redirect::Policy::none());
+    builder
         .build()
         .map_err(|e| report_reqwest_error("Failed to build HTTP client", &e))
 }

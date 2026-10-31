@@ -39,6 +39,7 @@ git diff "$BASE_BRANCH"..."$SYNC_BRANCH" -- '*.rs' '*.ts' '*.tsx' '*.json' '*.to
   | grep -E '^\+' | grep -E 'https?://|reqwest|hf_hub|tauri-plugin-|updater|fetch\(' || echo "(none)"
 
 if [[ $OPEN_PR -eq 1 ]]; then
+  git push origin "$MIRROR_BRANCH"
   git push -u origin "$SYNC_BRANCH"
   gh pr create --base "$BASE_BRANCH" --head "$SYNC_BRANCH" \
     --title "Upstream sync ${STAMP} (${UPSTREAM_SHA})" \

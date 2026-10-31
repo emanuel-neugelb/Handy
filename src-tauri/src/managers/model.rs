@@ -888,6 +888,9 @@ impl ModelManager {
             fs::create_dir_all(&models_dir)?;
         }
 
+        #[cfg(feature = "nglb-managed")]
+        crate::nglb::link_staged_models(&models_dir);
+
         let mut available_models = HashMap::new();
 
         // Whisper supported languages (99 languages from tokenizer)
@@ -1832,6 +1835,12 @@ impl ModelManager {
             self.update_download_status()?;
             let _ = self.app_handle.emit("model-download-complete", &model_id);
             return Ok(());
+        }
+
+        if cfg!(feature = "nglb-managed") {
+            return Err(anyhow::anyhow!(
+                "Hugging Face downloads are disabled by NGLB policy; models are provisioned by IT"
+            ));
         }
 
         // Mark downloading; the guard resets the flag on any error path.

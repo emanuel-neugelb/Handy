@@ -14,6 +14,8 @@ mod helpers;
 mod input;
 mod language_detection;
 mod llm_client;
+#[cfg(feature = "nglb-managed")]
+mod nglb;
 mod managers;
 mod memory;
 mod overlay;

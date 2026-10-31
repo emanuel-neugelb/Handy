@@ -1,0 +1,13 @@
+tauri-plugin-autostart
+tauri-plugin-clipboard-manager
+tauri-plugin-dialog
+tauri-plugin-fs
+tauri-plugin-global-shortcut
+tauri-plugin-log
+tauri-plugin-macos-permissions
+tauri-plugin-opener
+tauri-plugin-os
+tauri-plugin-process
+tauri-plugin-single-instance
+tauri-plugin-store
+tauri-plugin-updater
