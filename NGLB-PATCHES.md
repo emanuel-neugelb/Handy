@@ -16,22 +16,40 @@ Rules:
 
 ## Patched upstream files
 
+Status: `done` = merged on `nglb/main` and in the pilot build.
+
 | File | Change | Ticket | Status |
 |------|--------|--------|--------|
-| `src-tauri/Cargo.toml` | add feature `nglb-managed`; vendor `hf-hub` | HND-003, HND-007 | planned |
-| `src-tauri/src/settings.rs` | managed-value overlay; remove cloud provider presets | HND-003, HND-004 | planned |
-| `src-tauri/src/llm_client.rs` | host allowlist, no redirects | HND-004 | planned |
-| `src-tauri/src/catalog/mod.rs` | replace `MIRRORS` | HND-005 | planned |
-| `src-tauri/src/managers/model.rs`, `managers/model/download.rs` | block HuggingFace, pinned hashes | HND-005 | planned |
-| `src-tauri/src/lib.rs` | drop the updater and opener plugins; load the managed layer | HND-003, HND-005 | planned |
-| `src-tauri/tauri.conf.json` | CSP, updater block removed | HND-004, HND-005 | planned |
-| `src-tauri/capabilities/*.json` | drop `opener`, `updater`; trim `fs` | HND-004 | planned |
-| `src/components/**` | hide provider UI, update checker and external links; show locked state | HND-003, HND-005 | planned |
+| `src-tauri/Cargo.toml` | feature `nglb-managed`; dependency pins | HND-003, HND-007 | done |
+| `src-tauri/src/settings.rs` | managed-value overlay (locked settings) | HND-003, HND-004 | done |
+| `src-tauri/src/llm_client.rs` | host allowlist, no redirects | HND-004 | done |
+| `src-tauri/src/managers/model.rs`, `managers/model/download.rs` | block HuggingFace downloads, use staged models, pinned hashes | HND-005 | done |
+| `src-tauri/src/managers/history.rs` | retention: recording and transcript deleted at save (`history_limit=0`), startup sweep of leftover wavs | HND-006 | done |
+| `src-tauri/src/lib.rs` | managed layer loaded; updater and opener plugins removed; window title "NGLB Dictate" | HND-003, HND-005 | done |
+| `src-tauri/src/tray.rs` | tray tooltip "NGLB Dictate v..." | HND-013 | done |
+| `src-tauri/tauri.conf.json` | CSP, updater block removed, product name and identifier `com.neugelb.dictate` | HND-004, HND-005 | done |
+| `src-tauri/capabilities/default.json`, `desktop.json` | `opener` and `updater` permissions dropped | HND-004 | done |
+| `index.html`, `.env.production` | document title, production flags | HND-013 | done |
+| `src/components/icons/*` (`HandyHand`, `HandyMascot`, `HandyTextLogo`, `TrayIcon`) | NGLB branding replaces Handy name and logo | HND-013 | done |
+| `src/components/onboarding/OnboardingFlow.tsx` | branding | HND-013 | done |
+| `src/components/settings/about/AboutSettings.tsx` | source link to `emanuel-neugelb/NGLB-Dictate`; donate button removed | HND-013 | done |
+| `src/i18n/locales/*` | Handy name replaced by NGLB Dictate (`nglb/rebrand.sh`, idempotent) | HND-013 | done |
+| `src-tauri/icons/*` | placeholder NGLB icons (`nglb/make-icon.py`, `make-tray-icons.py`) | HND-013 | done, real artwork open |
+
+After each upstream sync, re-run `nglb/rebrand.sh` (also run by `build-pkg.sh`) and check `src/i18n/locales/*` for new "Handy" strings.
 
 ## New NGLB-only files
 
 | File | Purpose | Ticket |
 |------|---------|--------|
-| `nglb/sync-upstream.sh` | upstream merge workflow | HND-002 |
-| `src-tauri/src/nglb/` | managed policy and the allowlist | HND-003, HND-004 |
-| `.github/workflows/nglb-*.yml` | CI invariants and the weekly sync | HND-007 |
+| `src-tauri/src/nglb/mod.rs` | managed policy, allowlist, fail-closed plist handling, guards | HND-003, HND-004 |
+| `nglb/sync-upstream.sh` | upstream merge workflow (`--pr`) | HND-002 |
+| `nglb/check-upstream-release.sh` | reports whether upstream has a newer release | HND-014 |
+| `nglb/check-invariants.sh`, `allowed-plugins.txt`, `allowed-git-sources.txt` | CI invariants | HND-007 |
+| `nglb/build-pkg.sh`, `rebrand.sh`, `make-icon.py`, `make-tray-icons.py` | packaging and branding | HND-008, HND-013 |
+| `.github/workflows/nglb-ci.yml`, `nglb-upstream-sync.yml` | CI invariants and the weekly upstream sync | HND-007, HND-014 |
+| `.github/CODEOWNERS` | review ownership | HND-007 |
+| `NGLB-NOTICE.md`, `NGLB-RUNBOOK.md`, `NGLB-PATCHES.md` | attribution, operations, patch registry | HND-009, HND-014 |
+
+## Disabled upstream workflows
+All inherited upstream workflows (build, release, playwright, nix and others) are disabled on the fork through the GitHub API. Re-disable any workflow that a sync reintroduces.
