@@ -6,7 +6,7 @@
 
 use crate::settings::{
     AppSettings, PostProcessApiFormat, PostProcessProvider, APPLE_INTELLIGENCE_DEFAULT_MODEL_ID,
-    APPLE_INTELLIGENCE_PROVIDER_ID,
+    APPLE_INTELLIGENCE_PROVIDER_ID, RecordingRetentionPeriod,
 };
 use log::warn;
 use serde::Deserialize;
@@ -275,6 +275,15 @@ pub fn enforce_settings(settings: &mut AppSettings) {
 
 fn enforce_settings_with(policy: &Policy, settings: &mut AppSettings) {
     settings.update_checks_enabled = false;
+    // Background tool: hidden start at login, tray icon kept so it can be reached.
+    settings.start_hidden = true;
+    settings.autostart_enabled = true;
+    settings.show_tray_icon = true;
+    settings.experimental_enabled = false;
+    // Keep no dictation history: each recording and transcript is deleted as
+    // soon as it has been saved (before the text is pasted).
+    settings.history_limit = 0;
+    settings.recording_retention_period = RecordingRetentionPeriod::PreserveLimit;
 
     let mut providers: Vec<PostProcessProvider> = Vec::new();
     if policy.llm_mode != LlmMode::Off {
@@ -439,6 +448,24 @@ mod tests {
         }));
         assert!(s.post_process_providers.iter().all(|p| !p.allow_base_url_edit));
         assert_ne!(s.post_process_provider_id, "openai");
+    }
+
+    #[test]
+    fn enforce_locks_startup_and_retention() {
+        let mut s = crate::settings::get_default_settings();
+        s.start_hidden = false;
+        s.autostart_enabled = false;
+        s.experimental_enabled = true;
+        s.history_limit = 50;
+        s.recording_retention_period = RecordingRetentionPeriod::Never;
+        enforce_settings_with(&Policy::locked_down(), &mut s);
+        assert!(s.start_hidden && s.autostart_enabled && s.show_tray_icon);
+        assert!(!s.experimental_enabled);
+        assert_eq!(s.history_limit, 0);
+        assert_eq!(
+            s.recording_retention_period,
+            RecordingRetentionPeriod::PreserveLimit
+        );
     }
 
     #[test]
