@@ -53,7 +53,7 @@ export const AboutSettings: React.FC = () => {
           <Button
             variant="secondary"
             size="md"
-            onClick={() => openUrl("https://github.com/emanuel-neugelb/Handy")}
+            onClick={() => openUrl("https://github.com/emanuel-neugelb/NGLB-Dictate")}
           >
             {t("settings.about.sourceCode.button")}
           </Button>
