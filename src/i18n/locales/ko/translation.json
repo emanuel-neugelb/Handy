@@ -199,10 +199,10 @@
       "subTray": "이제 Handy가 시스템 트레이에 있습니다. 어떤 앱에서든 <keys/>를 누르거나 탭해서 말하세요.",
       "hint": "나중에 설정에서 바꿀 수 있습니다",
       "highFiveLabel": "하이파이브",
-      "atLogin": "로그인할 때 Handy 시작",
+      "atLogin": "로그인할 때 NGLB Dictate 시작",
       "finish": "완료",
       "panel": {
-        "name": "Handy",
+        "name": "NGLB Dictate",
         "ready": "준비됨",
         "languages": "언어",
         "model": "음성 모델",
@@ -327,7 +327,7 @@
     "general": {
       "title": "일반",
       "shortcut": {
-        "title": "Handy 단축키",
+        "title": "NGLB Dictate 단축키",
         "description": "음성-텍스트 녹음을 시작하는 키보드 단축키를 설정하세요",
         "loading": "단축키 로딩 중...",
         "none": "설정된 단축키 없음",
@@ -428,7 +428,7 @@
       },
       "rescan": {
         "label": "다시 스캔",
-        "tooltip": "Handy 외부에서 모델 폴더 또는 Hugging Face 캐시에 추가된 모델을 다시 스캔합니다"
+        "tooltip": "NGLB Dictate 외부에서 모델 폴더 또는 Hugging Face 캐시에 추가된 모델을 다시 스캔합니다"
       }
     },
     "languages": {
@@ -498,7 +498,7 @@
       },
       "showTrayIcon": {
         "label": "트레이 아이콘 표시",
-        "description": "시스템 트레이에 Handy 아이콘을 표시합니다."
+        "description": "시스템 트레이에 NGLB Dictate 아이콘을 표시합니다."
       },
       "overlay": {
         "style": {
@@ -871,7 +871,7 @@
       },
       "whatsNewUpdates": {
         "label": "새 소식 표시",
-        "description": "Handy 업데이트 후 릴리스 노트를 표시합니다"
+        "description": "NGLB Dictate 업데이트 후 릴리스 노트를 표시합니다"
       },
       "appDataDirectory": {
         "title": "앱 데이터 디렉토리",
@@ -884,7 +884,7 @@
       },
       "supportDevelopment": {
         "title": "개발 지원",
-        "description": "Handy 개발을 계속할 수 있도록 도와주세요",
+        "description": "NGLB Dictate 개발을 계속할 수 있도록 도와주세요",
         "button": "후원하기"
       },
       "acknowledgments": {
@@ -913,7 +913,7 @@
     "portableUpdateBrowseButton": "GitHub Releases 열기"
   },
   "whatsNew": {
-    "title": "Handy v{{version}}의 새 소식"
+    "title": "NGLB Dictate v{{version}}의 새 소식"
   },
   "common": {
     "loading": "로딩 중...",
@@ -944,7 +944,7 @@
   },
   "appLanguage": {
     "title": "애플리케이션 언어",
-    "description": "Handy 인터페이스의 언어를 변경하세요"
+    "description": "NGLB Dictate 인터페이스의 언어를 변경하세요"
   },
   "theme": {
     "title": "앱 테마",

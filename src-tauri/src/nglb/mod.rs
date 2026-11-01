@@ -15,8 +15,8 @@ use std::path::PathBuf;
 use std::sync::Mutex;
 use std::time::{Duration, Instant};
 
-const POLICY_PLIST: &str = "/Library/Managed Preferences/com.pais.handy.plist";
-const DEFAULT_MODEL_STAGE_DIR: &str = "/Library/Application Support/NGLB/Handy/models";
+const POLICY_PLIST: &str = "/Library/Managed Preferences/com.neugelb.dictate.plist";
+const DEFAULT_MODEL_STAGE_DIR: &str = "/Library/Application Support/NGLB/Dictate/models";
 const CACHE_TTL: Duration = Duration::from_secs(5);
 
 pub const LOCAL_PROVIDER_ID: &str = "nglb_local";

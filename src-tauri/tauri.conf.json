@@ -1,8 +1,9 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
-  "productName": "Handy",
+  "productName": "NGLB Dictate",
+  "mainBinaryName": "nglb-dictate",
   "version": "0.9.8",
-  "identifier": "com.pais.handy",
+  "identifier": "com.neugelb.dictate",
   "build": {
     "beforeDevCommand": "bun run dev",
     "devUrl": "http://localhost:1420",

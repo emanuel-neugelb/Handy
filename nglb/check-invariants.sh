@@ -24,7 +24,7 @@ if c.get("plugins", {}).get("updater", {}).get("endpoints"):
     errs.append("updater endpoints must be empty")
 if c.get("bundle", {}).get("createUpdaterArtifacts"):
     errs.append("createUpdaterArtifacts must be false")
-if c.get("identifier") != "com.pais.handy":
+if c.get("identifier") != "com.neugelb.dictate":
     errs.append("bundle identifier changed; update the Jamf profile preference domain too")
 for e in errs:
     print("INVARIANT VIOLATION:", e, file=sys.stderr)
