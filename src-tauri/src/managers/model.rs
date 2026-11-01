@@ -1101,6 +1101,9 @@ impl ModelManager {
             let models = self.available_models.lock().unwrap();
             models.values().cloned().collect()
         };
+        // Managed build: only IT-staged (on-disk) models are ever offered.
+        #[cfg(feature = "nglb-managed")]
+        list.retain(|m| m.is_downloaded);
         // Stable, reasonable order: catalog editorial rank first (lower = higher
         // priority), then any other recommended model, then by accuracy, speed,
         // and name. `ModelInfo` doesn't carry rank, so resolve it by id from the
