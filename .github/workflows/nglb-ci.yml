@@ -1,0 +1,50 @@
+name: nglb-ci
+on:
+  pull_request:
+  push:
+    branches: [nglb/main]
+  workflow_dispatch:
+
+concurrency:
+  group: nglb-ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  invariants:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v5
+      - name: NGLB policy invariants
+        run: ./nglb/check-invariants.sh
+
+  test-and-audit:
+    needs: invariants
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v5
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: swatinem/rust-cache@v2
+        with:
+          workspaces: "./src-tauri -> target"
+      - name: Rust tests (managed build)
+        working-directory: src-tauri
+        run: cargo test --lib
+      - name: Dependency audit
+        # Reports inherited upstream advisories without blocking; triage per NGLB-RUNBOOK.md
+        continue-on-error: true
+        working-directory: src-tauri
+        run: |
+          cargo install cargo-audit --locked
+          cargo audit
+      - name: SBOM (CycloneDX)
+        working-directory: src-tauri
+        run: |
+          cargo install cargo-cyclonedx --locked
+          cargo cyclonedx --format json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: sbom
+          path: src-tauri/**/*.cdx.json

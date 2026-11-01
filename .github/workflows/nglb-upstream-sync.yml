@@ -1,0 +1,26 @@
+name: nglb-upstream-sync
+on:
+  schedule:
+    - cron: "0 6 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - name: Sync
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git config user.name "nglb-sync-bot"
+          git config user.email "nglb-sync-bot@users.noreply.github.com"
+          git checkout nglb/main
+          git branch -f upstream-mirror origin/upstream-mirror
+          ./nglb/sync-upstream.sh --pr
