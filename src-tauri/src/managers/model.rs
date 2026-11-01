@@ -888,6 +888,9 @@ impl ModelManager {
             fs::create_dir_all(&models_dir)?;
         }
 
+        #[cfg(feature = "nglb-managed")]
+        crate::nglb::link_staged_models(&models_dir);
+
         let mut available_models = HashMap::new();
 
         // Whisper supported languages (99 languages from tokenizer)
@@ -1098,6 +1101,9 @@ impl ModelManager {
             let models = self.available_models.lock().unwrap();
             models.values().cloned().collect()
         };
+        // Managed build: only IT-staged (on-disk) models are ever offered.
+        #[cfg(feature = "nglb-managed")]
+        list.retain(|m| m.is_downloaded);
         // Stable, reasonable order: catalog editorial rank first (lower = higher
         // priority), then any other recommended model, then by accuracy, speed,
         // and name. `ModelInfo` doesn't carry rank, so resolve it by id from the
@@ -1832,6 +1838,12 @@ impl ModelManager {
             self.update_download_status()?;
             let _ = self.app_handle.emit("model-download-complete", &model_id);
             return Ok(());
+        }
+
+        if cfg!(feature = "nglb-managed") {
+            return Err(anyhow::anyhow!(
+                "Hugging Face downloads are disabled by NGLB policy; models are provisioned by IT"
+            ));
         }
 
         // Mark downloading; the guard resets the flag on any error path.

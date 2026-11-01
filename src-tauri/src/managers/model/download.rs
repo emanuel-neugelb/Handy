@@ -273,8 +273,11 @@ impl ModelManager {
             info!("Starting fresh download of {} from {}", model_id, url);
         }
 
+        #[cfg(feature = "nglb-managed")]
+        crate::nglb::guard_download_url(url).map_err(|e| anyhow::anyhow!(e))?;
         let client = reqwest::Client::builder()
             .connect_timeout(HTTP_CONNECT_TIMEOUT)
+            .redirect(reqwest::redirect::Policy::none())
             .build()?;
         let mut request = client.get(url);
         if resume_from > 0 {

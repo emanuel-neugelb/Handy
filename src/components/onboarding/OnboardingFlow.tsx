@@ -125,8 +125,14 @@ export const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
 
   if (!permissions.checked) return null;
 
+  // Managed build: IT stages the model, so skip the picker once one is on disk.
+  const managedModelReady =
+    import.meta.env.VITE_NGLB_MANAGED === "1" &&
+    models.offered.some((m) => models.infoFor(m)?.is_downloaded);
   const steps = STEP_ORDER.filter(
-    (s) => s !== "permissions" || permissions.needed || store.welcomeBack,
+    (s) =>
+      (s !== "permissions" || permissions.needed || store.welcomeBack) &&
+      (s !== "model" || !managedModelReady || store.step === "model"),
   );
   const step = steps.includes(store.step) ? store.step : steps[0];
   const progress = { index: steps.indexOf(step), count: steps.length };

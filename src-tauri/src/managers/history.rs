@@ -119,7 +119,38 @@ impl HistoryManager {
         // Initialize database and run migrations synchronously
         manager.init_database()?;
 
+        #[cfg(feature = "nglb-managed")]
+        manager.purge_leftover_recordings();
+
         Ok(manager)
+    }
+
+    /// Managed build: apply retention at startup and remove any recording the
+    /// database no longer references (e.g. from an interrupted dictation).
+    #[cfg(feature = "nglb-managed")]
+    fn purge_leftover_recordings(&self) {
+        if let Err(e) = self.cleanup_old_entries() {
+            warn!("Startup history cleanup failed: {}", e);
+        }
+        let known: std::collections::HashSet<String> = match self.get_connection().and_then(|c| {
+            let mut stmt = c.prepare("SELECT file_name FROM transcription_history")?;
+            let rows = stmt.query_map([], |r| r.get::<_, String>(0))?;
+            Ok(rows.flatten().collect())
+        }) {
+            Ok(k) => k,
+            Err(e) => {
+                warn!("Could not list history files: {}", e);
+                return;
+            }
+        };
+        if let Ok(dir) = fs::read_dir(&self.recordings_dir) {
+            for entry in dir.flatten() {
+                let name = entry.file_name().to_string_lossy().to_string();
+                if name.ends_with(".wav") && !known.contains(&name) {
+                    let _ = fs::remove_file(entry.path());
+                }
+            }
+        }
     }
 
     fn init_database(&self) -> Result<()> {
