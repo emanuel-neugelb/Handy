@@ -17,7 +17,7 @@ Upstream: https://github.com/cjpais/Handy (MIT). Current baseline: **v0.9.8**.
 
 ### 2.1 Detect
 - Weekly (Monday) run `nglb/check-upstream-release.sh`. Exit `10` = newer upstream release.
-- Optional automation: `nglb-upstream-watch.yml` (weekly GitHub Action that opens an issue). It needs the `workflow` token scope to be pushed; until then the weekly manual check applies.
+- Automation: `nglb-upstream-sync.yml` runs every Monday 06:00 UTC and opens a sync PR via `sync-upstream.sh --pr` (can also be started manually: Actions → nglb-upstream-sync → Run workflow). The PR is never merged automatically.
 - Also subscribe to releases: GitHub → cjpais/Handy → Watch → Custom → Releases.
 
 ### 2.2 Prepare (never skip a step)
