@@ -13,6 +13,7 @@ Rules:
 
 ## Baseline
 - Forked from upstream commit `7bfb2e2c934b798bcf6e3627653aed2439996f89` (v0.9.8, 2026-10-27).
+- Current baseline: upstream **v0.10.0** (merged 2026-11-02, release `0.10.0-nglb1`).
 
 ## Patched upstream files
 
@@ -22,9 +23,10 @@ Status: `done` = merged on `nglb/main` and in the pilot build.
 |------|--------|--------|--------|
 | `src-tauri/Cargo.toml` | feature `nglb-managed`; dependency pins | HND-003, HND-007 | done |
 | `src-tauri/src/settings.rs` | managed-value overlay (locked settings) | HND-003, HND-004 | done |
-| `src-tauri/src/llm_client.rs` | host allowlist, no redirects | HND-004 | done |
+| `src-tauri/src/llm_client.rs` | host allowlist, no redirects (re-applied on the shared client in v0.10.0) | HND-004 | done |
 | `src-tauri/src/managers/model.rs`, `managers/model/download.rs` | block HuggingFace downloads, use staged models, pinned hashes | HND-005 | done |
 | `src-tauri/src/managers/history.rs` | retention: recording and transcript deleted at save (`history_limit=0`), startup sweep of leftover wavs | HND-006 | done |
+| `src-tauri/src/transcription_hook.rs` | upstream user hook (program receiving transcripts) disabled in the managed build; invariant 8 | v0.10.0 sync | done |
 | `src-tauri/src/lib.rs` | managed layer loaded; updater and opener plugins removed; window title "NGLB Dictate" | HND-003, HND-005 | done |
 | `src-tauri/src/tray.rs` | tray tooltip "NGLB Dictate v..." | HND-013 | done |
 | `src-tauri/tauri.conf.json` | CSP, updater block removed, product name and identifier `com.neugelb.dictate` | HND-004, HND-005 | done |
