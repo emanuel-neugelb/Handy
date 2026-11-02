@@ -63,5 +63,9 @@ if grep -rnE 'api\.openai\.com|api\.anthropic\.com|openrouter\.ai|api\.groq\.com
   bad "cloud provider or telemetry host found (above)"
 fi
 
+# 8. No user-supplied program may receive transcripts (upstream transcription hook).
+grep -q 'cfg(feature = "nglb-managed")' src-tauri/src/transcription_hook.rs \
+  || bad "transcription hook is not disabled in the managed build"
+
 [ $fail -eq 0 ] && echo "NGLB invariants OK"
 exit $fail
