@@ -16,6 +16,18 @@ const HOOK_TIMEOUT: Duration = Duration::from_secs(30);
 /// Returns the hook's output, or `text` unchanged if there's no hook or it
 /// fails. Dropping the future kills the hook, so callers can cancel it.
 pub async fn apply(app: &AppHandle, text: String) -> String {
+    // Managed build: no user-supplied programs may receive transcripts.
+    #[cfg(feature = "nglb-managed")]
+    {
+        let _ = app;
+        return text;
+    }
+    #[cfg(not(feature = "nglb-managed"))]
+    apply_hook(app, text).await
+}
+
+#[cfg(not(feature = "nglb-managed"))]
+async fn apply_hook(app: &AppHandle, text: String) -> String {
     let Ok(dir) = crate::portable::app_data_dir(app) else {
         return text;
     };
